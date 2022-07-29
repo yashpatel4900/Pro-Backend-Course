@@ -26,4 +26,4 @@ const userSchema = new mongoose.Schema({
 
 // Exporting an object which is following this 'user' schema
 // dosen't matter to write User or user as mongoose bring everything in lowercase while processing
-module.exports = mongoose.Schema("user", userSchema);
+module.exports = mongoose.model("user", userSchema);
