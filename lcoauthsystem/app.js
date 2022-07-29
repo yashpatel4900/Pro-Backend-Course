@@ -1,4 +1,6 @@
+// It makes sense writing all require  statements first
 require("dotenv").config();
+
 const express = require("express");
 
 const app = express();
