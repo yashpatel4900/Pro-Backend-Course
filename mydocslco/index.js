@@ -72,6 +72,10 @@ app.post("/api/v1/addCourse", (req, res) => {
 
 app.post("/api/v1/courseupload", (req, res) => {
   const sampleFile = req.files.sampleFile;
+
+  // Adding this line to see what type of information is brought up by sampleFile
+  console.log(sampleFile);
+
   let path = __dirname + "/images/" + Date.now() + ".jpg";
 
   sampleFile.mv(path, (err) => {
