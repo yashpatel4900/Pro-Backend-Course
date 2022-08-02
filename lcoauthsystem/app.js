@@ -11,10 +11,12 @@ const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const user = require("./model/user");
 const auth = require("./middleware/auth");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.get("/", (req, res) => {
   res.send("<h1>Hello from Auth System - LCO</h1>");
@@ -113,7 +115,21 @@ app.post("/login", async (req, res) => {
 
       user.token = token;
       user.password = undefined;
-      res.status(200).json(user);
+      // res.status(200).json(user);
+
+      // This is option 2 that we are trying in place of sending token in headers
+      // Sending the token through cookie
+      const option = {
+        expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+        // httpOnly when sets to true, it makes sure that the cookie will not be accessable by frontend
+        httpOnly: true,
+      };
+
+      res.status(200).cookie("token", token, option).json({
+        success: true,
+        token,
+        user,
+      });
     }
 
     // If password doesn't match
@@ -124,7 +140,7 @@ app.post("/login", async (req, res) => {
 });
 
 app.get("/dashboard", auth, (req, res) => {
-  res.send("Welcome to secret information.");
+  res.clearCookie("token").send("Welcome to secret information.");
 });
 
 // Instead of writing all listen statements in app.js we will write them in index.js
