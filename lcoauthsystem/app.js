@@ -65,6 +65,9 @@ app.post("/register", async (req, res) => {
     user.token = await token;
     // Various strategies on Update or not
 
+    // Do not want to send the encrypted password to the res
+    user.password = undefined;
+
     // 201 because something is created
     res.status(201).json(user);
   } catch (error) {
