@@ -9,6 +9,7 @@ const express = require("express");
 const User = require("./model/user");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const user = require("./model/user");
 
 const app = express();
 
@@ -70,6 +71,52 @@ app.post("/register", async (req, res) => {
 
     // 201 because something is created
     res.status(201).json(user);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.post("/login", async (req, res) => {
+  try {
+    // Grabbing enterned email, password
+    const { email, password } = req.body;
+
+    // Check if any mandatory field is missing
+    if (!(email && password)) {
+      res.status(400).send("A required field is missing");
+    }
+
+    // Search for the user in database
+    const user = await User.findOne({ email });
+
+    // Check is the user registered one?
+    if (user === null) {
+      res
+        .status(400)
+        .send(
+          "Email entered is not a registered one. Please first register it."
+        );
+    }
+    // For debugging
+    // console.log(user);
+
+    // If everything matching generate and asign a token for 2h
+    if (email && (await bcryptjs.compare(password, user.password))) {
+      const token = await jwt.sign(
+        { user_id: user._id, email },
+        process.env.SECRET_KEY,
+        {
+          expiresIn: "2h",
+        }
+      );
+
+      user.token = token;
+      user.password = undefined;
+      res.status(200).json(user);
+    }
+
+    // If password doesn't match
+    res.send(400).send("Either email or password is incorrect");
   } catch (error) {
     console.log(error);
   }
