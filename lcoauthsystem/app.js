@@ -10,6 +10,7 @@ const User = require("./model/user");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const user = require("./model/user");
+const auth = require("./middleware/auth");
 
 const app = express();
 
@@ -120,6 +121,10 @@ app.post("/login", async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+});
+
+app.get("/dashboard", auth, (req, res) => {
+  res.send("Welcome to secret information.");
 });
 
 // Instead of writing all listen statements in app.js we will write them in index.js
