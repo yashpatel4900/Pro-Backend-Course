@@ -1,8 +1,10 @@
+const { response } = require("express");
 const express = require("express");
-const razorpay = require("razorpay");
+const Razorpay = require("razorpay");
 
 const app = express();
 
+app.use(express.static("./public"));
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -13,8 +15,8 @@ app.post("/order", async (req, res) => {
   const amount = req.body.amount;
 
   var instance = new Razorpay({
-    key_id: "YOUR_KEY_ID",
-    key_secret: "YOUR_SECRET",
+    key_id: "rzp_test_zhN8KyrEfaawFX",
+    key_secret: "hgTStQlvJPveKgjPFh1Jz27l",
   });
 
   var options = {
