@@ -1,0 +1,25 @@
+// Suppose you want to add this user to database
+myuser = {
+    name : "Yash",
+}
+
+// Using Promises
+const saveUser = (req, res) => {
+    User.create(myuser)
+        .then( user => {} )
+        .catch()
+}
+
+// Using try catch - Remember its not enough and somethimes you still need to use Promises
+const saveUser = async (req, res) => {
+    try {
+        const user = await User.create(myuser);
+    } catch(){
+
+    }
+}
+
+// Helper
+const BigPromise = func => (req,res,next) => {
+    Promise.resolve( func(req,res,next) ).catch(next)
+}

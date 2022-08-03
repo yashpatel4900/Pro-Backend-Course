@@ -1,0 +1,12 @@
+root
+        - config
+        - controllers
+        - middleware
+        - models
+        - routes
+        - seeds
+        - utils
+        - .gitignore
+        - .env
+        - app.js
+        - index.js
