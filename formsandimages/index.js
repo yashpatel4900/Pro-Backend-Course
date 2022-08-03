@@ -32,16 +32,40 @@ app.get("/myget", (req, res) => {
 
 app.post("/mypost", async (req, res) => {
   console.log(req.body);
-  console.log(req.files);
+  // console.log(req.files);
 
+  // Handling Multiple files
+
+  let result;
+  let imageArray = [];
+
+  if (req.files) {
+    for (let index = 0; index < req.files.sampleFile.length; index++) {
+      result = await cloudinary.uploader.upload(
+        req.files.sampleFile[index].tempFilePath,
+        {
+          folder: "users",
+        }
+      );
+
+      // Pushing details of each file being uploaded in array
+      imageArray.push({
+        public_id: result.public_id,
+        secure_url: result.secure_url,
+      });
+    }
+  }
+
+  // Handling a single file
+  // // // // // // // // // // // // // // // // // // // //
   // Grabbing file comming from form
-  let file = req.files.sampleFile;
+  // let file = req.files.sampleFile;
 
   // Use exact keyword 'result' according to docs as cloudinary will return some data after upload
   // according to docs - cloudinary.v2.uploader.upload(file, options, callback);
-  result = await cloudinary.uploader.upload(file.tempFilePath, {
-    folder: "users",
-  });
+  // result = await cloudinary.uploader.upload(file.tempFilePath, {
+  //   folder: "users",
+  // });
 
   console.log(result);
 
@@ -50,7 +74,10 @@ app.post("/mypost", async (req, res) => {
     firstname: req.body.firstname,
     lastname: req.body.lastname,
     result,
+    imageArray,
   };
+
+  console.log(details);
   res.send(details);
 });
 
